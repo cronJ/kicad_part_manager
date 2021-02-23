@@ -4,6 +4,7 @@ import random
 
 import part_class
 
+
 def create_part_number(part_number_list):
     highest_number = 0
 
@@ -12,7 +13,8 @@ def create_part_number(part_number_list):
         if n > highest_number:
             highest_number = n
 
-    return "PN-{}".format(str(highest_number + 1).zfill(13))
+    return "PN-{}".format(str(highest_number + 1).zfill(10))
+
 
 def list_all_part_numbers(part_folder, file_list):
     part_number_list = []
@@ -25,11 +27,12 @@ def list_all_part_numbers(part_folder, file_list):
                         parts = yaml.safe_load(stream)
                     except yaml.YAMLError as exc:
                         print(exc)
-                
+
                 for part in parts:
                     part_number_list.append(part)
 
     return part_number_list
+
 
 def list_all_yaml_files(part_folder):
     file_list = []
@@ -44,14 +47,33 @@ def list_all_yaml_files(part_folder):
 
     return file_list
 
+
+def get_all_parts(directory, file_list):
+    parts = []
+
+    for filename in file_list:
+        with open(os.path.join(directory, filename), 'r') as stream:
+            try:
+                content = yaml.safe_load(stream)
+            except yaml.YAMLError as exc:
+                print(exc)
+        
+def load_parts(directory):
+    parts = list()
+    filelist = list()
+
+    for path, _, files in os.walk(directory):
+        for file in files:
+            filepath = os.path.join(path, file)
+            fileext = os.path.splitext(file)
+            if fileext[1] == '.json':
+                filelist.append(filepath)
+
+    print(filelist)
+
 if __name__ == '__main__':
 
     # Get the current directory and attach the part_data folder
-    yaml_directory = os.path.join(os.getcwd(), "part_data")
+    part_dir = os.path.join(os.getcwd(), "Parts")
 
-    yaml_files = list_all_yaml_files(yaml_directory)
-    part_numbers = list_all_part_numbers(yaml_directory, yaml_files)
-
-    part_number = create_part_number(part_numbers)
-
-    print(part_number)
+    load_parts(part_dir)
