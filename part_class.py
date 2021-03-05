@@ -1,7 +1,7 @@
 class Part:
     def __init__(self, part_number, group):
         self.part_number = part_number
-        selv.version = ""
+        self.version = ""
         self.group = group
         self.type = ""
         self.value = ""
